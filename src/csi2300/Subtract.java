@@ -3,6 +3,7 @@ package csi2300;
 import java.util.Random;
 
 import javafx.animation.TranslateTransition;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -25,17 +26,17 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 
-//class Loader {
-public class Subtract {
+class Subtract {
 
     private Label question;
     private Label answer;
     //private Label flag;
     private Text flag;
     private TextField result;
-    private int level;
 
     int sum1;
     int sum2 = -1;
@@ -45,27 +46,19 @@ public class Subtract {
     int number2;
 
     int counter = 1;
-    //counter = 550/
-    //int LEVEL = 3;
-    Subtract(TextField result, Label answer, Label question, Text flag, int level) {
+    int LEVEL = 3;
+    int level;
+
+    //int n;
+    String op;
+
+    Subtract(TextField result, Label answer, Label question, Text flag, int level, String op) {
         this.question = question;
         this.answer = answer;
         this.result = result;
         this.flag = flag;
         this.level = level;
-    }
-
-
-    public int loadQuestion(int number1, int number2) {
-        question.setText(number1 + " x " + number2 + " = ?");
-        return number1 * number2;
-    }
-
-
-    public int loadAnswer(TextField result, Label answer) {
-        int res = Integer.parseInt(result.getText());
-        answer.setText(result.getText());
-        return res;     
+        this.op = op;
     }
 
 
@@ -98,22 +91,9 @@ public class Subtract {
         result.setLayoutY(255);
 
         rand = new Random(); 
-        number1 = rand.nextInt(10); 
-        number2 = rand.nextInt(10);
-
-        question.setText(number1 + " x " + number2);
-
-        // AnswerPrompt prompt = new AnswerPrompt(
-        //     gp.getScene().getWindow()
-        // );
-
-        // String res = prompt.getResult();
-
-        // result.setText(res);
+        randomNum();
 
     }
-
-
 
     public void submitBtn(Pane gp) {
 
@@ -125,7 +105,7 @@ public class Subtract {
         gp.getChildren().add(cir);
 
         submit.setLayoutX(260);
-        submit.setLayoutY(270);
+        submit.setLayoutY(300);
 
         cir.setFill(Color.DARKSALMON);
         cir.setRadius(30);
@@ -135,18 +115,49 @@ public class Subtract {
         submit.setDefaultButton(true);
         submit.setOnAction(e -> {
 
-            if (counter < level) { 
+            if (counter < 3) { 
 
                 try {
-                    sum1 = loadQuestion(number1, number2);
+
                     if (result.getText().isEmpty()) {
+
                         Alert alert = new Alert(AlertType.ERROR, "Please enter a number");
                         alert.showAndWait();
                         sum2 = -1;
                         answer.setText("");
                         Platform.runLater(() -> result.requestFocus());
+
                     } else {
-                        sum2 = loadAnswer(result, answer);
+
+                        sum2 = Integer.parseInt(result.getText());
+
+                        if (sum1 == sum2) {
+                                    
+                            transition.setAutoReverse(false);
+                            transition.setNode(cir);
+                            
+                            cir.setLayoutX(500);
+                            cir.setLayoutY(550 - 50 * counter);
+
+                            transition.play();
+
+                            counter++;
+                            
+                            answer.setText(number1 + op + number2 + " = " + result.getText());
+                            flag.setText("Correct");
+                            //flag.setStyle("-fx-color: green");
+                            //flag = new Text("Correct!");
+                            flag.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
+                            flag.setFill(Color.GREEN);
+                            result.clear();
+                        }
+                        else {
+                            answer.setText(number1 + op + number2 + " = " + result.getText());
+                            flag.setText("Incorrect");
+                            flag.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
+                            flag.setFill(Color.RED);
+                            result.clear();
+                        } 
                     }
                     
                 } catch(NumberFormatException ex){ 
@@ -154,47 +165,23 @@ public class Subtract {
                 }
 
                 
-                if (!(result.getText().isEmpty())) {
-
-                    //System.out.println(sum1);
-                    //System.out.println(sum2);
-
-                    if (sum1 == sum2) {
-                                
-                        transition.setAutoReverse(false);
-                        transition.setNode(cir);
-                        
-                        cir.setLayoutX(500);
-                        cir.setLayoutY(550 - 500/level * counter);
-
-                        transition.play();
-
-                        counter++;
-                        
-                        answer.setText(number1 + " x " + number2 + " = " + result.getText());
-                        flag.setText("Correct");
-                        flag.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
-                        flag.setFill(Color.GREEN);
-                        result.clear();
-                    }
-                    else {
-                        answer.setText(number1 + " x " + number2 + " = " + result.getText());
-                        flag.setText("Incorrect");
-                        flag.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
-                        flag.setFill(Color.RED);
-                        result.clear();
-                    } 
-                }
-                
             } else {
+                    
+                    answer.setText(number1 + op + number2 + " = " + result.getText());
+                    flag.setText("Correct");
+                    flag.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
+                    flag.setFill(Color.GREEN);
+                    result.clear();
+
                     transition.setAutoReverse(false);
                     transition.setNode(cir);
                     transition.play();
                     cir.setLayoutY(50);
-                    System.out.println(counter);
-                    System.out.println(level);
-                    if (counter == level)
+
+
+                    if (counter == LEVEL)
                         display();
+
                     cir.setLayoutY(550);
                     counter = 1;
                     result.clear();
@@ -203,6 +190,7 @@ public class Subtract {
                     flag.setText("");
             }
 
+            //Platform.runLater(() -> result.requestFocus());
         });
     }
 
@@ -211,25 +199,56 @@ public class Subtract {
         Button continuebtn = new Button("Continue");
         
         continuebtn.setOnAction(e -> {
-            number1 = rand.nextInt(10); 
-            number2 = rand.nextInt(10);
 
-            question.setText(number1 + " x " + number2);
+            randomNum();
             result.clear();
             answer.setText("");
             flag.setText("");
-            sum1 = 0;
-            sum2 = 0;
+
             Platform.runLater(() -> result.requestFocus());
         });
 
         gp.getChildren().add(continuebtn);
         continuebtn.setLayoutX(260);
-        continuebtn.setLayoutY(300);
+        continuebtn.setLayoutY(270);
     }
 
 
+    public void randomNum() {
+                        
+        int n = rand.nextInt(1,4);
 
+        number1 = rand.nextInt(0,10);
+        number2 = rand.nextInt(0,10);
+
+        switch (n) {
+
+            case 1:     question.setText(number1 + " + " + number2 + " = ?");
+                        op = " + ";
+                        sum1 = number1 + number2;
+                        break;
+                    
+            case 2:     question.setText(number1 + " - " + number2 + " = ?");
+                        op = " - ";                   
+                        sum1 = number1 - number2;
+                        break;
+                    
+            case 3:     question.setText(number1 + " * " + number2 + " = ?");
+                        op = " * ";
+                        sum1 = number1 * number2;
+                        break;
+                    
+            case 4:     question.setText(number1 + " / " + number2 + " = ?");
+                        op = " / ";
+                        sum1 =  number1 / number2;
+                        break;
+            default:    op = "";
+                    
+        }
+
+    }
+
+    
     public void homeBtn(Pane gp, Stage primaryStage) {
 
         Button btnExit = new Button("Home");
@@ -244,42 +263,49 @@ public class Subtract {
 
             item1.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent event) {
-                   Pane pane = new Pane();
-                   Label question = new Label("");
-                   Label answer = new Label();
-                   TextField result = new TextField();
-                   Addition addition = new Addition(result, answer, question, flag, counter);
-       
-                   Scene scene = new Scene(pane, 600, 600);
-       
-                   primaryStage.setTitle("Space game!");
-                   primaryStage.setScene(scene);
-                   primaryStage.show();
-                   addition.loadText(pane);
-                   addition.submitBtn(pane);
-                   addition.renewBtn(pane);
-                   addition.homeBtn(pane, primaryStage);
+
+                    Pane pane = new Pane();
+                    Label question = new Label();
+                    question.setText("");
+                    Label answer = new Label();
+                    TextField result = new TextField();
+                    String op = "";
+                    Addition addition = new Addition(result, answer, question, flag, level, op);
+        
+                    Scene scene = new Scene(pane, 600, 600);
+        
+                    primaryStage.setTitle("Space game!");
+                    primaryStage.setScene(scene);
+                    primaryStage.show();
+                    addition.loadText(pane);
+                    addition.randomNum();
+                    addition.submitBtn(pane);
+                    addition.renewBtn(pane);
+                    addition.homeBtn(pane, primaryStage);
                }
             });
                
             item2.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent event) {
                    
-                   Pane pane1 = new Pane();
-                   Label question1 = new Label("");
-                   Label answer1 = new Label();
-                   TextField result1 = new TextField();
-                   Subtract subtract = new Subtract(result1, answer1, question1, flag, counter);
-                   Scene scene1 = new Scene(pane1, 600, 600);
-                   //Home home = new Home();
-       
-                   primaryStage.setTitle("Space game!");
-                   primaryStage.setScene(scene1);
-                   primaryStage.show();
-                   subtract.loadText(pane1);
-                   subtract.submitBtn(pane1);
-                   subtract.renewBtn(pane1);
-                   subtract.homeBtn(pane1, primaryStage);
+                    Pane pane = new Pane();
+                    Label question = new Label();
+                    question.setText("");
+                    Label answer = new Label();
+                    TextField result = new TextField();
+                    String op = "";
+                    Addition addition = new Addition(result, answer, question, flag, level, op);
+        
+                    Scene scene = new Scene(pane, 600, 600);
+        
+                    primaryStage.setTitle("Space game!");
+                    primaryStage.setScene(scene);
+                    primaryStage.show();
+                    addition.loadText(pane);
+                    addition.randomNum();
+                    addition.submitBtn(pane);
+                    addition.renewBtn(pane);
+                    addition.homeBtn(pane, primaryStage);
                 }
              });
              
@@ -318,8 +344,9 @@ public class Subtract {
         VBox layout= new VBox(10);
         layout.getChildren().addAll(label, button);
         layout.setAlignment(Pos.CENTER);
-        Scene scene= new Scene(layout, 250, 160);
-        popupwindow.setScene(scene);
+        Scene scene1= new Scene(layout, 250, 160);
+            
+        popupwindow.setScene(scene1);
         popupwindow.showAndWait();
         
     }

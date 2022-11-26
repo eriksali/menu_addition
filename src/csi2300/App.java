@@ -23,6 +23,7 @@ public class App extends Application {
 
       Text flag = new Text();
       int level = 4;
+      
       //Creating a menu
       Menu menu = new Menu("Option");
       //Creating menu Items
@@ -35,17 +36,21 @@ public class App extends Application {
       item1.setOnAction(new EventHandler<ActionEvent>() {
          public void handle(ActionEvent event) {
             Pane pane = new Pane();
-            Label question = new Label("");
+            Label question = new Label();
+            question.setText("");
             Label answer = new Label();
             TextField result = new TextField();
-            Addition addition = new Addition(result, answer, question, flag, level);
+            String op = "";
+            Addition addition = new Addition(result, answer, question, flag, level, op);
 
             Scene scene = new Scene(pane, 600, 600);
 
             primaryStage.setTitle("Space game!");
             primaryStage.setScene(scene);
             primaryStage.show();
+
             addition.loadText(pane);
+            addition.randomNum();
             addition.submitBtn(pane);
             addition.renewBtn(pane);
             addition.homeBtn(pane, primaryStage);
@@ -55,21 +60,25 @@ public class App extends Application {
      item2.setOnAction(new EventHandler<ActionEvent>() {
          public void handle(ActionEvent event) {
             
-            Pane pane1 = new Pane();
-            Label question1 = new Label("");
-            Label answer1 = new Label();
-            TextField result1 = new TextField();
-            Subtract subtract = new Subtract(result1, answer1, question1, null, 0);
-            Scene scene1 = new Scene(pane1, 600, 600);
-            //Home home = new Home();
+            Pane pane = new Pane();
+            Label question = new Label();
+            question.setText("");
+            Label answer = new Label();
+            TextField result = new TextField();
+            String op = "";
+            Addition addition = new Addition(result, answer, question, flag, level, op);
+
+            Scene scene = new Scene(pane, 600, 600);
 
             primaryStage.setTitle("Space game!");
-            primaryStage.setScene(scene1);
+            primaryStage.setScene(scene);
             primaryStage.show();
-            subtract.loadText(pane1);
-            subtract.submitBtn(pane1);
-            subtract.renewBtn(pane1);
-            subtract.homeBtn(pane1, primaryStage);
+
+            addition.loadText(pane);
+            addition.randomNum();
+            addition.submitBtn(pane);
+            addition.renewBtn(pane);
+            addition.homeBtn(pane, primaryStage);
          }
       });
 
