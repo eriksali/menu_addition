@@ -1,0 +1,76 @@
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+
+
+
+
+public class App extends Application {
+   public void start(Stage primaryStage) {
+      //Creating a menu
+      Menu menu = new Menu("Option");
+      //Creating menu Items
+      MenuItem item1 = new MenuItem("Addition");
+      MenuItem item2 = new MenuItem("Subtract");
+      //Adding all the menu items to the menu
+      menu.getItems().addAll(item1, item2);
+
+      Pane pane = new Pane();
+      Label question = new Label("");
+      Label answer = new Label();
+      TextField result = new TextField();
+      Addition addition = new Addition(result, answer, question);
+      Subtract subtract = new Subtract(result, answer, question);
+
+      Scene scene = new Scene(pane, 600, 600);
+
+      primaryStage.setTitle("Space game!");
+      primaryStage.setScene(scene);
+      primaryStage.show();
+ 
+      
+      item1.setOnAction(new EventHandler<ActionEvent>() {
+        public void handle(ActionEvent event) {
+
+            addition.loadText(pane);
+            addition.submitBtn(pane);
+            addition.renewBtn(pane);
+            addition.exitBtn(pane, primaryStage);
+        }
+     });
+     //Handling the event of the exit menu item
+     item2.setOnAction(new EventHandler<ActionEvent>() {
+         public void handle(ActionEvent event) {
+            subtract.loadText(pane);
+            subtract.submitBtn(pane);
+            subtract.renewBtn(pane);
+            subtract.exitBtn(pane, primaryStage);
+         }
+      });
+      //Creating a menu bar and adding menu to it.
+      MenuBar menuBar = new MenuBar(menu);
+      menuBar.setTranslateX(3);
+      menuBar.setTranslateY(3);
+      //Setting the stage
+      //Group root = new Group(menuBar);
+      Scene scene1 = new Scene(menuBar, 595, 355, Color.BEIGE);
+      primaryStage.setTitle("Menu Example");
+      primaryStage.setScene(scene1);
+      primaryStage.show();
+
+
+   }
+   public static void main(String args[]){
+      launch(args);
+   }
+}

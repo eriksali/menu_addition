@@ -3,7 +3,6 @@ package csi2300;
 import java.util.Random;
 
 import javafx.animation.TranslateTransition;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -26,36 +25,33 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
 
 
 class Subtract {
 
     private Label question;
     private Label answer;
-    //private Label flag;
     private Text flag;
-    private TextField result;
+    private TextField resu1lt;
 
-    int sum1;
-    int sum2 = -1;
+    int resu1;
+    int resu2 = -1;
 
     Random rand;
     int number1;
     int number2;
 
     int counter = 1;
-    int LEVEL = 3;
+    int LEVEL = 10;
     int level;
 
     //int n;
     String op;
 
-    Subtract(TextField result, Label answer, Label question, Text flag, int level, String op) {
+    Subtract(TextField resu1lt, Label answer, Label question, Text flag, int level, String op) {
         this.question = question;
         this.answer = answer;
-        this.result = result;
+        this.resu1lt = resu1lt;
         this.flag = flag;
         this.level = level;
         this.op = op;
@@ -71,7 +67,7 @@ class Subtract {
         gp.getChildren().add(questiontxt);
         gp.getChildren().add(answertxt);
         gp.getChildren().add(question);
-        gp.getChildren().add(result);
+        gp.getChildren().add(resu1lt);
         gp.getChildren().add(answer);
         gp.getChildren().add(flag);
 
@@ -87,8 +83,8 @@ class Subtract {
         flag.setLayoutX(260);
         flag.setLayoutY(245);
 
-        result.setLayoutX(50);
-        result.setLayoutY(255);
+        resu1lt.setLayoutX(50);
+        resu1lt.setLayoutY(255);
 
         rand = new Random(); 
         randomNum();
@@ -115,23 +111,23 @@ class Subtract {
         submit.setDefaultButton(true);
         submit.setOnAction(e -> {
 
-            if (counter < 3) { 
+            if (counter < LEVEL) { 
 
                 try {
 
-                    if (result.getText().isEmpty()) {
+                    if (resu1lt.getText().isEmpty()) {
 
                         Alert alert = new Alert(AlertType.ERROR, "Please enter a number");
                         alert.showAndWait();
-                        sum2 = -1;
+                        resu2 = -1;
                         answer.setText("");
-                        Platform.runLater(() -> result.requestFocus());
+                        Platform.runLater(() -> resu1lt.requestFocus());
 
                     } else {
 
-                        sum2 = Integer.parseInt(result.getText());
+                        resu2 = Integer.parseInt(resu1lt.getText());
 
-                        if (sum1 == sum2) {
+                        if (resu1 == resu2) {
                                     
                             transition.setAutoReverse(false);
                             transition.setNode(cir);
@@ -143,20 +139,20 @@ class Subtract {
 
                             counter++;
                             
-                            answer.setText(number1 + op + number2 + " = " + result.getText());
+                            answer.setText(number1 + op + number2 + " = " + resu1lt.getText());
                             flag.setText("Correct");
                             //flag.setStyle("-fx-color: green");
                             //flag = new Text("Correct!");
                             flag.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
                             flag.setFill(Color.GREEN);
-                            result.clear();
+                            resu1lt.clear();
                         }
                         else {
-                            answer.setText(number1 + op + number2 + " = " + result.getText());
+                            answer.setText(number1 + op + number2 + " = " + resu1lt.getText());
                             flag.setText("Incorrect");
                             flag.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
                             flag.setFill(Color.RED);
-                            result.clear();
+                            resu1lt.clear();
                         } 
                     }
                     
@@ -167,11 +163,11 @@ class Subtract {
                 
             } else {
                     
-                    answer.setText(number1 + op + number2 + " = " + result.getText());
+                    answer.setText(number1 + op + number2 + " = " + resu1lt.getText());
                     flag.setText("Correct");
                     flag.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
                     flag.setFill(Color.GREEN);
-                    result.clear();
+                    resu1lt.clear();
 
                     transition.setAutoReverse(false);
                     transition.setNode(cir);
@@ -184,13 +180,13 @@ class Subtract {
 
                     cir.setLayoutY(550);
                     counter = 1;
-                    result.clear();
+                    resu1lt.clear();
                     question.setText("");
                     answer.setText("");
                     flag.setText("");
             }
 
-            //Platform.runLater(() -> result.requestFocus());
+            //Platform.runLater(() -> resu1lt.requestFocus());
         });
     }
 
@@ -201,11 +197,11 @@ class Subtract {
         continuebtn.setOnAction(e -> {
 
             randomNum();
-            result.clear();
+            resu1lt.clear();
             answer.setText("");
             flag.setText("");
 
-            Platform.runLater(() -> result.requestFocus());
+            Platform.runLater(() -> resu1lt.requestFocus());
         });
 
         gp.getChildren().add(continuebtn);
@@ -216,7 +212,7 @@ class Subtract {
 
     public void randomNum() {
                         
-        int n = rand.nextInt(1,4);
+        int n = rand.nextInt(1,5);
 
         number1 = rand.nextInt(0,10);
         number2 = rand.nextInt(0,10);
@@ -225,22 +221,24 @@ class Subtract {
 
             case 1:     question.setText(number1 + " + " + number2 + " = ?");
                         op = " + ";
-                        sum1 = number1 + number2;
+                        resu1 = number1 + number2;
                         break;
                     
             case 2:     question.setText(number1 + " - " + number2 + " = ?");
                         op = " - ";                   
-                        sum1 = number1 - number2;
+                        resu1 = number1 - number2;
                         break;
                     
             case 3:     question.setText(number1 + " * " + number2 + " = ?");
                         op = " * ";
-                        sum1 = number1 * number2;
+                        resu1 = number1 * number2;
                         break;
                     
-            case 4:     question.setText(number1 + " / " + number2 + " = ?");
+            case 4:     while (number2 == 0)
+                            number2 = rand.nextInt(0,10);
+                        question.setText(number1 + " / " + number2 + " = ?");
                         op = " / ";
-                        sum1 =  number1 / number2;
+                        resu1 =  number1 / number2;
                         break;
             default:    op = "";
                     
@@ -263,14 +261,13 @@ class Subtract {
 
             item1.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent event) {
-
                     Pane pane = new Pane();
                     Label question = new Label();
                     question.setText("");
                     Label answer = new Label();
-                    TextField result = new TextField();
+                    TextField resu1lt = new TextField();
                     String op = "";
-                    Addition addition = new Addition(result, answer, question, flag, level, op);
+                    Addition addition = new Addition(resu1lt, answer, question, flag, level, op);
         
                     Scene scene = new Scene(pane, 600, 600);
         
@@ -292,9 +289,9 @@ class Subtract {
                     Label question = new Label();
                     question.setText("");
                     Label answer = new Label();
-                    TextField result = new TextField();
+                    TextField resu1lt = new TextField();
                     String op = "";
-                    Addition addition = new Addition(result, answer, question, flag, level, op);
+                    Addition addition = new Addition(resu1lt, answer, question, flag, level, op);
         
                     Scene scene = new Scene(pane, 600, 600);
         
